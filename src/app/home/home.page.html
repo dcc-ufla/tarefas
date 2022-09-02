@@ -18,6 +18,11 @@
             [(ngModel)]="taskName"
             (keyup.enter)="addTask()"
           ></ion-input>
+          <ion-buttons slot="end" *ngIf="tasks.length !== 0">
+            <ion-button (click)="toggleReorder()" slot="end">
+              <ion-icon slot="icon-only" name="swap-vertical-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
         </ion-item>
 
         <ion-list class="container" lines="none">
@@ -26,34 +31,40 @@
               >Oba, minha lista de tarefas está vazia!</ion-label
             >
           </ion-item>
-
-          <ion-item class="clickable-item" *ngFor="let task of tasks">
-            <ion-label
-              class="ion-text-wrap"
-              [ngClass]="{'task-done' : task.isDone}"
-              (click)="toggleTask(task)"
-            >
-              {{ task.name }}
-            </ion-label>
-
-            <ion-buttons slot="end">
-              <ion-chip
-                color="primary"
-                slot="end"
-                *ngIf="task.deadline"
-                (click)="scheduleTask(task)"
+          <ion-reorder-group [disabled]="!isReordering" (ionItemReorder)="reorderTask($event)">
+            <ion-item class="clickable-item" *ngFor="let task of tasks">
+              <ion-label
+                class="ion-text-wrap"
+                [ngClass]="{'task-done' : task.isDone}"
+                (click)="toggleTask(task)"
               >
-                <ion-label>{{ task.deadline | date:'dd/MM' }}</ion-label>
-              </ion-chip>
+                {{ task.name }}
+              </ion-label>
 
-              <ion-button (click)="showMenu(task)">
-                <ion-icon
-                  slot="icon-only"
-                  name="ellipsis-vertical-outline"
-                ></ion-icon>
-              </ion-button>
-            </ion-buttons>
-          </ion-item>
+              <ion-buttons slot="end">
+                <ion-chip
+                  color="primary"
+                  slot="end"
+                  *ngIf="task.deadline"
+                  (click)="scheduleTask(task)"
+                >
+                  <ion-label>{{ task.deadline | date:'dd/MM' }}</ion-label>
+                </ion-chip>
+
+                <ion-button (click)="showMenu(task)" *ngIf="!isReordering">
+                  <ion-icon
+                    slot="icon-only"
+                    name="ellipsis-vertical-outline"
+                  ></ion-icon>
+                </ion-button>
+                <ion-reorder *ngIf="isReordering">
+                  <ion-button class="disabled-effects">
+                    <ion-icon slot="icon-only" name="reorder-three-outline"></ion-icon>
+                  </ion-button>
+                </ion-reorder>
+              </ion-buttons>
+            </ion-item>
+          </ion-reorder-group>
         </ion-list>
 
         <ion-item color="light" lines="none">

@@ -4,6 +4,9 @@ import {
   AlertController,
   IonInput,
 } from '@ionic/angular';
+import {
+  ItemReorderEventDetail
+} from '@ionic/core';
 import { Task } from '../models/task';
 import { TaskService } from '../services/task.service';
 
@@ -17,6 +20,7 @@ export class HomePage implements OnInit {
 
   tasks: Task[] = [];
   taskName: string = '';
+  isReordering: boolean = false;
 
   constructor(
     private _taskService: TaskService,
@@ -139,6 +143,17 @@ export class HomePage implements OnInit {
     });
 
     await actionSheet.present();
+  }
+
+  async reorderTask(event: CustomEvent<ItemReorderEventDetail>) {
+    const initialPosition = event.detail.from;
+    const endPosition = event.detail.to;
+    event.detail.complete();
+    await this._taskService.reorderTask(initialPosition, endPosition);
+  }
+
+  toggleReorder() {
+    this.isReordering = !this.isReordering;
   }
 
   get today(): Date {
