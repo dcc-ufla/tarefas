@@ -145,7 +145,8 @@ export class HomePage implements OnInit {
     await actionSheet.present();
   }
 
-  async reorderTask(event: CustomEvent<ItemReorderEventDetail>) {
+  async reorderTask(e: Event) {
+    const event = e as CustomEvent<ItemReorderEventDetail>;
     const initialPosition = event.detail.from;
     const endPosition = event.detail.to;
     event.detail.complete();
