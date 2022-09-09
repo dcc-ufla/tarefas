@@ -5,3 +5,8 @@
 .clickable-item:hover {
   cursor: pointer;  
 }
+
+ion-button.disabled-effects {
+  --background-hover: var(--background);
+  --ripple-color: transparent;
+}

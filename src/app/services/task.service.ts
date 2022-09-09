@@ -57,6 +57,13 @@ export class TaskService {
     }
   }
 
+  async reorderTask(initialPosition: number, endPosition: number) {
+    const task = this._tasks[initialPosition];
+    this._tasks.splice(initialPosition, 1);
+    this._tasks.splice(endPosition, 0, task);
+    await this.store();
+  }
+
   private validateTask(task: Task): boolean {
     return task?.name.trim().length > 0;
   }
